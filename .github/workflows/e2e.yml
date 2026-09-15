@@ -1,0 +1,60 @@
+# End-to-end verification — Mockonomy exercises its own automation API on an emulator.
+#
+# Why a separate workflow: booting an emulator is expensive (~4–6 min), and running it on
+# every PR would slow feedback down.
+#
+# The test path is the same one `docs/automation-api.md` promises to users — there is no
+# special "test mode". That keeps the documentation from rotting.
+#
+# Manual runs only (Actions → E2E → Run workflow) until the emulator run is proven stable;
+# add a `schedule:` trigger once it is.
+
+name: E2E
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  emulator-e2e:
+    # For KVM: reactivecircus/android-emulator-runner uses Linux hardware acceleration;
+    # macOS runners are not needed here and cost 10x more.
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      matrix:
+        api-level: [34]  # Android 14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable KVM access
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build the debug APK
+        run: ./gradlew :app:assembleDebug --no-daemon
+
+      - name: Run end-to-end checks on the emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          profile: pixel_6
+          emulator-boot-timeout: 900
+          disable-animations: true
+          disk-size: 4096M
+          script: bash .github/scripts/e2e.sh

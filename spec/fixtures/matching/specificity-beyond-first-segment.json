@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "name": "specificity-beyond-first-segment",
+    "description": "Specificity comparison stops at the first differing position — the shared parameter segment is skipped and the literal wins at the third segment",
+    "phase": 1,
+    "specRef": "behavior/matching.md#4-route-selection-specificity"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-a",
+    "name": "A",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "routes": [
+      {
+        "id": "route-a-x-y",
+        "method": "GET",
+        "path": "/a/:x/:y",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-x-y",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"source\":\"x-y\"}",
+            "isDefault": true
+          }
+        ]
+      },
+      {
+        "id": "route-a-x-c",
+        "method": "GET",
+        "path": "/a/:x/c",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-x-c",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"source\":\"x-c\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/a/1/c",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "body": "{\"source\":\"x-c\"}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {
+    "x": "1"
+  }
+}

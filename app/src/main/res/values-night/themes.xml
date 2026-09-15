@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark theme cold-start background (#161826) — see values/themes.xml. -->
+    <style name="Theme.Mockonomy" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#161826</item>
+    </style>
+</resources>

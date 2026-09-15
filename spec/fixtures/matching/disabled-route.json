@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "name": "disabled-route",
+    "description": "A route with enabled=false is skipped during matching",
+    "phase": 0,
+    "specRef": "behavior/matching.md#2-finding-candidate-routes"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-test",
+    "name": "Test",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-ping",
+        "method": "GET",
+        "path": "/ping",
+        "enabled": false,
+        "responses": [
+          {
+            "id": "resp-ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"status\":\"ok\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 404,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"error\":\"no_match\",\"message\":\"No route matched GET /ping\"}",
+    "latencyMs": 0
+  }
+}

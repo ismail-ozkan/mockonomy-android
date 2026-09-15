@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "name": "prefix-segment-boundary",
+    "description": "The prefix is compared per segment; 'api' does not match /apixyz",
+    "phase": 0,
+    "specRef": "behavior/matching.md#1-prefix-stripping"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-test",
+    "name": "Test",
+    "port": 8080,
+    "prefix": "api",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-ping",
+        "method": "GET",
+        "path": "/ping",
+        "responses": [
+          {
+            "id": "resp-ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"status\":\"ok\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/apixyz/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 404,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"error\":\"no_match\",\"message\":\"No route matched GET /apixyz/ping\"}",
+    "latencyMs": 0
+  }
+}

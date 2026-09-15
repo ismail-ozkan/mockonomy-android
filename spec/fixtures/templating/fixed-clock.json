@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "name": "fixed-clock",
+    "description": "now and timestamp with a fixed clock; the time zone is always UTC",
+    "phase": 2,
+    "specRef": "behavior/templating.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-tpl",
+    "name": "Templating",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "GET",
+        "path": "/now",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-1",
+            "label": "200 – ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"iso\":\"{{now}}\",\"date\":\"{{now \"yyyy-MM-dd\"}}\",\"ts\":{{timestamp}}}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/now",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"iso\":\"2026-03-14T15:09:26Z\",\"date\":\"2026-03-14\",\"ts\":1773500966}",
+    "latencyMs": 0
+  },
+  "now": "2026-03-14T15:09:26Z"
+}

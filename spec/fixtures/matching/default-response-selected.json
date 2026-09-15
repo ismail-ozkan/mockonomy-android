@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "name": "default-response-selected",
+    "description": "The isDefault response comes before list order",
+    "phase": 0,
+    "specRef": "behavior/matching.md#5-response-selection"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-test",
+    "name": "Test",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-ping",
+        "method": "GET",
+        "path": "/ping",
+        "responses": [
+          {
+            "id": "first",
+            "statusCode": 500,
+            "headers": [],
+            "body": "{\"e\":1}",
+            "isDefault": false
+          },
+          {
+            "id": "default",
+            "statusCode": 201,
+            "headers": [],
+            "body": "{\"ok\":true}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 201,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"ok\":true}",
+    "latencyMs": 0
+  }
+}

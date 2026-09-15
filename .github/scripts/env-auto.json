@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 2,
+  "id": "env-auto-verify",
+  "key": "auto",
+  "name": "Auto Verify",
+  "port": 8080,
+  "prefix": "",
+  "headers": [
+    { "key": "Content-Type", "value": "application/json" }
+  ],
+  "states": ["logged_out", "logged_in"],
+  "initialState": "logged_out",
+  "routes": [
+    {
+      "id": "route-login",
+      "key": "login",
+      "method": "POST",
+      "path": "/auth/login",
+      "responses": [
+        { "id": "r-login-ok", "key": "ok", "statusCode": 200, "body": "{\"token\":\"t\"}", "whenState": "logged_out", "setState": "logged_in", "isDefault": true }
+      ]
+    },
+    {
+      "id": "route-profile",
+      "key": "profile",
+      "method": "GET",
+      "path": "/profile",
+      "responses": [
+        { "id": "r-prof-unauth", "key": "unauth", "statusCode": 401, "body": "{\"error\":\"unauthorized\"}", "whenState": "logged_out", "isDefault": true },
+        { "id": "r-prof-me", "key": "me", "statusCode": 200, "body": "{\"name\":\"Ada\"}", "whenState": "logged_in" }
+      ]
+    },
+    {
+      "id": "route-poll",
+      "key": "poll",
+      "method": "GET",
+      "path": "/poll",
+      "responseMode": "SEQUENTIAL",
+      "sequentialBehavior": "STAY_ON_LAST",
+      "responses": [
+        { "id": "r-poll-1", "key": "pending1", "statusCode": 202, "body": "{\"status\":\"pending\"}" },
+        { "id": "r-poll-2", "key": "pending2", "statusCode": 202, "body": "{\"status\":\"pending\"}" },
+        { "id": "r-poll-3", "key": "done", "statusCode": 200, "body": "{\"status\":\"done\"}" }
+      ]
+    },
+    {
+      "id": "route-reqnum",
+      "key": "reqnum",
+      "method": "GET",
+      "path": "/reqnum",
+      "responses": [
+        { "id": "r-rn-third", "key": "third", "statusCode": 200, "body": "{\"hit\":3}", "rules": [ { "target": "REQUEST_NUMBER", "operator": "EQUALS", "value": "3" } ] },
+        { "id": "r-rn-other", "key": "other", "statusCode": 429, "body": "{\"hit\":\"other\"}", "isDefault": true }
+      ]
+    },
+    {
+      "id": "route-getuser",
+      "key": "get-user",
+      "method": "GET",
+      "path": "/users/:id",
+      "responses": [
+        { "id": "r-gu-found", "key": "found", "statusCode": 200, "body": "{\"id\":\"{{path.id}}\"}", "isDefault": true },
+        { "id": "r-gu-nf", "key": "not-found", "statusCode": 404, "body": "{\"error\":\"no user\"}" }
+      ]
+    }
+  ]
+}

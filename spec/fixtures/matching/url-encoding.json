@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "name": "url-encoding",
+    "description": "Segments are percent-decoded before comparison",
+    "phase": 1,
+    "specRef": "behavior/matching.md#path-matching"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-test",
+    "name": "Test",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-search",
+        "method": "GET",
+        "path": "/search/:q",
+        "responses": [
+          {
+            "id": "resp-ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"found\":true}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/search/hello%20world",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"found\":true}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {
+    "q": "hello world"
+  }
+}

@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+local.properties
+
+# Kotlin compiler daemon session output
+.kotlin/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Signing — never committed
+*.jks
+*.keystore
+keystore.properties
+play-service-account.json
+firebase-service-account.json
+
+# macOS
+.DS_Store

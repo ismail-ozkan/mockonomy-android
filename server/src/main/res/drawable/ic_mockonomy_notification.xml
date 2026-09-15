@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    A notification icon must be a white silhouette; the system applies its own color.
+    This is the single-color version of the launcher mark ("3a — loop orbits the device").
+    The launcher drawing is positioned for the 66dp safe zone of a 108dp canvas; a
+    notification icon has no safe zone, so the mark is rescaled to the 20dp content of a
+    24dp box: bounding box x[27.05, 74.63] y[33.38, 74.63], center (50.84, 54),
+    width 47.58 → 90 units (×1.8917), then shifted horizontally by 3.16 to center it.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="50.84"
+        android:pivotY="54"
+        android:scaleX="1.8917"
+        android:scaleY="1.8917"
+        android:translateX="3.16">
+        <path
+            android:pathData="M54,33.375 A20.625,20.625 0 1 1 33.375,54"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="5.5"
+            android:strokeLineCap="round" />
+        <path
+            android:pathData="M33.375,39.7 L39.7,50.425 L27.05,50.425 Z"
+            android:fillColor="#FFFFFF" />
+        <path
+            android:pathData="M51.25,43.275 L56.75,43.275 A3.575,3.575 0 0 1 60.325,46.85 L60.325,61.15 A3.575,3.575 0 0 1 56.75,64.725 L51.25,64.725 A3.575,3.575 0 0 1 47.675,61.15 L47.675,46.85 A3.575,3.575 0 0 1 51.25,43.275 Z"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="3.575"
+            android:strokeLineJoin="round" />
+        <path
+            android:pathData="M51.8,60.6 L56.2,60.6"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="2.75"
+            android:strokeLineCap="round" />
+    </group>
+</vector>

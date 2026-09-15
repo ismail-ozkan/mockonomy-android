@@ -1,0 +1,174 @@
+{
+  "uuid": "",
+  "lastMigration": 29,
+  "name": "Mixed",
+  "endpointPrefix": "api",
+  "latency": 25,
+  "port": 3005,
+  "proxyMode": true,
+  "proxyHost": "http://example.test",
+  "cors": true,
+  "headers": [{ "key": "X-Env", "value": "1" }],
+  "routes": [
+    {
+      "uuid": "",
+      "type": "http",
+      "method": "get",
+      "endpoint": "widgets/:id",
+      "enabled": true,
+      "responseMode": null,
+      "responses": [
+        {
+          "uuid": "",
+          "statusCode": 200,
+          "label": "Full",
+          "headers": [
+            { "key": "Content-Type", "value": "application/json" },
+            { "key": "", "value": "" }
+          ],
+          "body": "{\"ok\":true}",
+          "latency": 10,
+          "bodyType": "INLINE",
+          "default": true,
+          "rules": [
+            { "target": "query", "modifier": "mode", "value": "full", "operator": "equals", "invert": false }
+          ],
+          "rulesOperator": "AND"
+        },
+        {
+          "uuid": "",
+          "statusCode": 404,
+          "label": "Denied",
+          "headers": [],
+          "body": "",
+          "bodyType": "INLINE",
+          "default": false,
+          "rules": [
+            { "target": "cookie", "modifier": "sid", "value": "x", "operator": "equals", "invert": false },
+            { "target": "body", "modifier": "role", "value": "admin", "operator": "regex_i", "invert": false },
+            { "target": "query", "modifier": "q", "value": "z", "operator": "array_includes", "invert": false }
+          ],
+          "rulesOperator": "OR"
+        }
+      ]
+    },
+    {
+      "uuid": "",
+      "type": "http",
+      "method": "post",
+      "endpoint": "login",
+      "enabled": true,
+      "responseMode": "SEQUENTIAL",
+      "responses": [
+        {
+          "uuid": "",
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "body": "{\"email\":\"{{faker 'internet.email'}}\"}",
+          "bodyType": "INLINE",
+          "default": true,
+          "rules": [],
+          "rulesOperator": "OR"
+        }
+      ]
+    },
+    {
+      "uuid": "",
+      "type": "http",
+      "method": "get",
+      "endpoint": "now",
+      "enabled": true,
+      "responseMode": null,
+      "responses": [
+        {
+          "uuid": "",
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "body": "{\"t\":\"{{now}}\"}",
+          "bodyType": "INLINE",
+          "default": true,
+          "rules": [],
+          "rulesOperator": "OR"
+        }
+      ]
+    },
+    {
+      "uuid": "",
+      "type": "crud",
+      "method": "",
+      "endpoint": "data",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "",
+          "statusCode": 200,
+          "body": "",
+          "bodyType": "DATABUCKET",
+          "default": true,
+          "rules": [],
+          "rulesOperator": "OR"
+        }
+      ]
+    },
+    {
+      "uuid": "",
+      "type": "ws",
+      "method": "get",
+      "endpoint": "stream",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "",
+          "statusCode": 200,
+          "body": "tick",
+          "bodyType": "INLINE",
+          "default": true,
+          "rules": [],
+          "rulesOperator": "OR"
+        }
+      ]
+    },
+    {
+      "uuid": "",
+      "type": "http",
+      "method": "connect",
+      "endpoint": "oops",
+      "enabled": true,
+      "responses": [
+        {
+          "uuid": "",
+          "statusCode": 200,
+          "body": "",
+          "bodyType": "INLINE",
+          "default": true,
+          "rules": [],
+          "rulesOperator": "OR"
+        }
+      ]
+    },
+    {
+      "uuid": "",
+      "type": "http",
+      "method": "get",
+      "endpoint": "file",
+      "enabled": true,
+      "responseMode": null,
+      "responses": [
+        {
+          "uuid": "",
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "body": "",
+          "filePath": "/data/x.json",
+          "bodyType": "FILE",
+          "default": true,
+          "rules": [],
+          "rulesOperator": "OR"
+        }
+      ]
+    }
+  ]
+}

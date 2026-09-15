@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "name": "session-flow",
+    "description": "Full session flow: logged_out → login → logged_in → logout → logged_out",
+    "phase": 4,
+    "specRef": "behavior/state-machine.md"
+  },
+  "environment": {
+    "schemaVersion": 2,
+    "id": "env-auth",
+    "name": "Auth",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "states": ["logged_out", "logged_in"],
+    "initialState": "logged_out",
+    "routes": [
+      {
+        "id": "route-login",
+        "method": "POST",
+        "path": "/auth/login",
+        "responses": [
+          {
+            "id": "resp-login-ok",
+            "statusCode": 200,
+            "body": "{\"token\":\"abc\"}",
+            "whenState": "logged_out",
+            "setState": "logged_in",
+            "isDefault": true
+          }
+        ]
+      },
+      {
+        "id": "route-logout",
+        "method": "POST",
+        "path": "/auth/logout",
+        "responses": [
+          {
+            "id": "resp-logout-ok",
+            "statusCode": 204,
+            "body": "",
+            "whenState": "logged_in",
+            "setState": "logged_out",
+            "isDefault": true
+          }
+        ]
+      },
+      {
+        "id": "route-profile",
+        "method": "GET",
+        "path": "/profile",
+        "responses": [
+          {
+            "id": "resp-unauth",
+            "statusCode": 401,
+            "body": "{\"error\":\"unauthorized\"}",
+            "whenState": "logged_out",
+            "isDefault": true
+          },
+          {
+            "id": "resp-profile",
+            "statusCode": 200,
+            "body": "{\"user\":\"me\"}",
+            "whenState": "logged_in"
+          }
+        ]
+      }
+    ]
+  },
+  "steps": [
+    {
+      "request": { "method": "GET", "path": "/profile" },
+      "expectedResponse": {
+        "statusCode": 401,
+        "headers": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": "{\"error\":\"unauthorized\"}",
+        "latencyMs": 0
+      },
+      "expectedStateAfter": "logged_out"
+    },
+    {
+      "request": { "method": "POST", "path": "/auth/login" },
+      "expectedResponse": {
+        "statusCode": 200,
+        "headers": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": "{\"token\":\"abc\"}",
+        "latencyMs": 0
+      },
+      "expectedStateAfter": "logged_in"
+    },
+    {
+      "request": { "method": "GET", "path": "/profile" },
+      "expectedResponse": {
+        "statusCode": 200,
+        "headers": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": "{\"user\":\"me\"}",
+        "latencyMs": 0
+      },
+      "expectedStateAfter": "logged_in"
+    },
+    {
+      "request": { "method": "POST", "path": "/auth/logout" },
+      "expectedResponse": {
+        "statusCode": 204,
+        "headers": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": "",
+        "latencyMs": 0
+      },
+      "expectedStateAfter": "logged_out"
+    },
+    {
+      "request": { "method": "GET", "path": "/profile" },
+      "expectedResponse": {
+        "statusCode": 401,
+        "headers": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": "{\"error\":\"unauthorized\"}",
+        "latencyMs": 0
+      },
+      "expectedStateAfter": "logged_out"
+    }
+  ]
+}

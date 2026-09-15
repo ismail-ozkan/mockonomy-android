@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cleartext (http://) traffic is allowed for two reasons:
+
+    1. Mockonomy's OWN loopback requests. The "Test connection" diagnostics send a
+       request to the running server over 127.0.0.1; without this permission the app
+       itself hits the same cleartext block as the app the user is testing, and the
+       diagnostics wrongly report "the server did not respond" (seen on a device).
+
+    2. The proxy target. Unmatched requests are forwarded to the target the user
+       configured; internal staging servers often speak http://. Since the target is an
+       arbitrary user URL, it cannot be limited with a domain list — cleartext must be
+       allowed in base-config, otherwise the proxy fails silently.
+
+    Security note: this permission does not widen the traffic Mockonomy produces. The app
+    only talks to the loopback mock server and to the proxy target the user chose; there
+    are no other outgoing connections.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

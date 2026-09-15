@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "name": "static-wins-over-param",
+    "description": "A literal segment beats a path parameter — even if the parameterized route comes first in the list",
+    "phase": 1,
+    "specRef": "behavior/matching.md#4-route-selection-specificity"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-users",
+    "name": "Users",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "routes": [
+      {
+        "id": "route-get-user",
+        "method": "GET",
+        "path": "/users/:id",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-by-id",
+            "label": "200 – by id",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"source\":\"by-id\"}",
+            "isDefault": true
+          }
+        ]
+      },
+      {
+        "id": "route-get-me",
+        "method": "GET",
+        "path": "/users/me",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-me",
+            "label": "200 – me",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"source\":\"me\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/users/me",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "body": "{\"source\":\"me\"}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {}
+}

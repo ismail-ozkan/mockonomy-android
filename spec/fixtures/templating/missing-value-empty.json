@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "name": "missing-value-empty",
+    "description": "A recognized helper with no data results in an empty string",
+    "phase": 2,
+    "specRef": "behavior/templating.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-tpl",
+    "name": "Templating",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "GET",
+        "path": "/echo",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-1",
+            "label": "200 – ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"q\":\"{{query.q}}\",\"h\":\"{{header.X-Absent}}\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/echo",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"q\":\"\",\"h\":\"\"}",
+    "latencyMs": 0
+  }
+}

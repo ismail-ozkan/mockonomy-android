@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "name": "path-param",
+    "description": "A path parameter matches a single segment and its value is captured",
+    "phase": 1,
+    "specRef": "behavior/matching.md#path-matching"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-users",
+    "name": "Users",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "routes": [
+      {
+        "id": "route-get-user",
+        "method": "GET",
+        "path": "/users/:id",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-found",
+            "label": "200 – found",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"id\":\"42\",\"name\":\"Test User\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/users/42",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "body": "{\"id\":\"42\",\"name\":\"Test User\"}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {
+    "id": "42"
+  }
+}

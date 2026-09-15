@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "name": "prefix",
+    "description": "The environment prefix is stripped from the request path before comparing with the route pattern",
+    "phase": 0,
+    "specRef": "behavior/matching.md#1-prefix-stripping"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-prefixed",
+    "name": "Prefixed",
+    "port": 8080,
+    "prefix": "api/v1",
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "routes": [
+      {
+        "id": "route-ping",
+        "method": "GET",
+        "path": "/ping",
+        "responses": [
+          {
+            "id": "resp-ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"status\":\"ok\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "body": "{\"status\":\"ok\"}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {}
+}

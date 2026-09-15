@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The exception needed to connect to Mockonomy.
+
+    Since Android 9 (API 28) cleartext HTTP is blocked by default. The error you get without
+    this file:
+
+        java.net.UnknownServiceException
+        CLEARTEXT communication to 127.0.0.1 not permitted by network security policy
+
+    The exception only covers loopback addresses; the rest of the app's traffic is not
+    affected.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">localhost</domain>
+    </domain-config>
+</network-security-config>

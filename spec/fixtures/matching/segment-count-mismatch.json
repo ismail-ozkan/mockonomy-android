@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "name": "segment-count-mismatch",
+    "description": "Different segment counts mean no match; there are no wildcards",
+    "phase": 0,
+    "specRef": "behavior/matching.md#path-matching"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-test",
+    "name": "Test",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-users",
+        "method": "GET",
+        "path": "/users",
+        "responses": [
+          {
+            "id": "resp-ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"status\":\"ok\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/users/42",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 404,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"error\":\"no_match\",\"message\":\"No route matched GET /users/42\"}",
+    "latencyMs": 0
+  }
+}

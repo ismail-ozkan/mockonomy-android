@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "name": "path-param-exists",
+    "description": "PATH_PARAM + EXISTS: a name not defined on the route is not found, so selection falls back to the default",
+    "phase": 2,
+    "specRef": "behavior/rules.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-rules",
+    "name": "Rules",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "GET",
+        "path": "/users/:id",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-hit",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"hit\":true}",
+            "rulesOperator": "AND",
+            "rules": [
+              {
+                "target": "PATH_PARAM",
+                "operator": "EXISTS",
+                "key": "role"
+              }
+            ]
+          },
+          {
+            "id": "resp-default",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"ok\":true}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/users/42",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"ok\":true}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {
+    "id": "42"
+  }
+}

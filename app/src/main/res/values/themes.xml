@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Window theme only. DayNight variants belong to AppCompat/Material Components;
+        this project is pure Compose, so it uses the framework theme. The visual identity
+        is built on the Compose side with MockonomyTheme. windowBackground only exists to
+        avoid the cold-start flash until Compose draws the first frame — the light theme
+        background token (#eceef8).
+    -->
+    <style name="Theme.Mockonomy" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#ECEEF8</item>
+    </style>
+
+    <!--
+        Android 12+ splash: a 288dp window icon whose drawing stays within the center 160dp.
+        The background is #161826 in both themes — the launcher icon background does not
+        change with the theme either, and the splash must carry the same identity. When the
+        splash ends postSplashScreenTheme takes over, and from there values-night handles
+        the light/dark split.
+    -->
+    <style name="Theme.Mockonomy.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#161826</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.Mockonomy</item>
+    </style>
+</resources>

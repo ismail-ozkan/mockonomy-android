@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mockonomy_notification_channel_name">Mock server</string>
+    <string name="mockonomy_notification_channel_description">Shows the mock server status while it is running.</string>
+    <string name="mockonomy_notification_starting">Starting…</string>
+    <string name="mockonomy_notification_stop">Stop</string>
+    <string name="mockonomy_notification_stop_all">Stop all</string>
+    <string name="mockonomy_notification_running_count">%1$d servers running</string>
+</resources>

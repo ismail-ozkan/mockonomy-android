@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "name": "method-mismatch",
+    "description": "Even if the path matches, a different method yields no candidate; the default 404 is returned and environment headers are not applied",
+    "phase": 0,
+    "specRef": "behavior/matching.md#3-no-candidates-fallback"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-basic",
+    "name": "Basic",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      { "key": "X-Env-Header", "value": "applied" }
+    ],
+    "routes": [
+      {
+        "id": "route-ping",
+        "method": "GET",
+        "path": "/ping",
+        "responses": [
+          {
+            "id": "resp-ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"status\":\"ok\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "POST",
+    "path": "/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 404,
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "body": "{\"error\":\"no_match\",\"message\":\"No route matched POST /ping\"}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {}
+}

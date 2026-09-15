@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "name": "body-dot-notation",
+    "description": "A value is read from the request body with dot notation",
+    "phase": 2,
+    "specRef": "behavior/templating.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-tpl",
+    "name": "Templating",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "POST",
+        "path": "/echo",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-1",
+            "label": "200 – ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"city\":\"{{body.user.address.city}}\",\"age\":{{body.user.age}}}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "POST",
+    "path": "/echo",
+    "query": {},
+    "headers": {},
+    "body": "{\"user\":{\"address\":{\"city\":\"Istanbul\"},\"age\":36}}"
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"city\":\"Istanbul\",\"age\":36}",
+    "latencyMs": 0
+  }
+}

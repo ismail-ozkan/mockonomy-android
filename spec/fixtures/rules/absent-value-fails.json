@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "name": "absent-value-fails",
+    "description": "A missing value is not even equal to the empty string",
+    "phase": 2,
+    "specRef": "behavior/rules.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-rules",
+    "name": "Rules",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "GET",
+        "path": "/ping",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-empty",
+            "label": "500",
+            "statusCode": 500,
+            "headers": [],
+            "body": "{\"empty\":true}",
+            "rulesOperator": "AND",
+            "rules": [
+              {
+                "target": "QUERY",
+                "operator": "EQUALS",
+                "key": "q"
+              }
+            ]
+          },
+          {
+            "id": "resp-default",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"ok\":true}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"ok\":true}",
+    "latencyMs": 0
+  }
+}

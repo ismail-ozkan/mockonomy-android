@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "name": "invert",
+    "description": "invert flips the result — EXISTS passes when there is no value",
+    "phase": 2,
+    "specRef": "behavior/rules.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-rules",
+    "name": "Rules",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "GET",
+        "path": "/ping",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-plain",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"plain\":true}",
+            "rulesOperator": "AND",
+            "rules": [
+              {
+                "target": "QUERY",
+                "operator": "EXISTS",
+                "key": "simulate",
+                "invert": true
+              }
+            ]
+          },
+          {
+            "id": "resp-default",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"ok\":true}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"plain\":true}",
+    "latencyMs": 0
+  }
+}

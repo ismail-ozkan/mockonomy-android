@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "name": "multi-value-any-match",
+    "description": "With multiple values, the rule passes if any one of them passes the operator",
+    "phase": 2,
+    "specRef": "behavior/rules.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-rules",
+    "name": "Rules",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "GET",
+        "path": "/ping",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-hit",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"hit\":true}",
+            "rulesOperator": "AND",
+            "rules": [
+              {
+                "target": "QUERY",
+                "operator": "EQUALS",
+                "key": "tag",
+                "value": "b"
+              }
+            ]
+          },
+          {
+            "id": "resp-default",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"ok\":true}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/ping",
+    "query": {
+      "tag": [
+        "a",
+        "b"
+      ]
+    },
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"hit\":true}",
+    "latencyMs": 0
+  }
+}

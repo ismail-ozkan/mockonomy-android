@@ -1,0 +1,49 @@
+# PR / push workflow — fast, no emulator.
+#
+# In this repository `./gradlew build` runs:
+#   - Unit tests of every module (:engine, :data, :server integration, :app ViewModels)
+#   - Android Lint (debug + release)
+#   - `:app:assembleRelease` + `:app:bundleRelease` (R8 shrinking/mapping is verified)
+# This is the same scope a developer sees when running `./gradlew build`.
+#
+# On-device verification (self-testing the automation API end to end on an emulator)
+# lives in a separate workflow: `.github/workflows/e2e.yml`.
+
+name: PR
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build (all modules + tests + lint + R8 release)
+        run: ./gradlew build --no-daemon --stacktrace
+
+      - name: Upload test reports (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/build/reports/tests/
+            **/build/reports/lint-results-*.html
+          if-no-files-found: ignore

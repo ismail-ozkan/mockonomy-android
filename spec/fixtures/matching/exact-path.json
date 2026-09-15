@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "name": "exact-path",
+    "description": "When method and path match exactly, the route's default response is served",
+    "phase": 0,
+    "specRef": "behavior/matching.md#2-finding-candidate-routes"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-basic",
+    "name": "Basic",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "routes": [
+      {
+        "id": "route-ping",
+        "method": "GET",
+        "path": "/ping",
+        "responses": [
+          {
+            "id": "resp-ok",
+            "label": "200 – ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"status\":\"ok\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      { "key": "Content-Type", "value": "application/json" }
+    ],
+    "body": "{\"status\":\"ok\"}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {}
+}

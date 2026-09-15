@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "name": "body-raw-contains",
+    "description": "BODY + an empty key points at the whole body (plain text)",
+    "phase": 2,
+    "specRef": "behavior/rules.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-rules",
+    "name": "Rules",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "POST",
+        "path": "/echo",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-hit",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"found\":true}",
+            "rulesOperator": "AND",
+            "rules": [
+              {
+                "target": "BODY",
+                "operator": "CONTAINS",
+                "value": "hello"
+              }
+            ]
+          },
+          {
+            "id": "resp-miss",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"ok\":true}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "POST",
+    "path": "/echo",
+    "query": {},
+    "headers": {},
+    "body": "say hello world"
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"found\":true}",
+    "latencyMs": 0
+  }
+}

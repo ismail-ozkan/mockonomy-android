@@ -1,0 +1,13 @@
+Mockonomy
+Copyright 2026 İsmail Özkan
+
+This product includes third-party fonts and icons distributed under their
+own licenses. Full license texts are in the licenses/ directory; details in
+THIRD_PARTY_LICENSES.md.
+
+- Inter — SIL Open Font License 1.1 (licenses/inter-OFL.txt)
+- JetBrains Mono — SIL Open Font License 1.1 (licenses/jetbrains-mono-OFL.txt)
+- Phosphor Icons — MIT License (licenses/phosphor-MIT.txt)
+
+Third-party libraries (Apache-2.0, MIT, BSD-3-Clause) and all of the above
+are listed in the app under Settings > Open source licenses.

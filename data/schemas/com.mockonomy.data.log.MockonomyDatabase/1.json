@@ -1,0 +1,141 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "0d2af1a41ef02193fc131200ac651b87",
+    "entities": [
+      {
+        "tableName": "request_log",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `environmentId` TEXT NOT NULL, `timestampMs` INTEGER NOT NULL, `method` TEXT NOT NULL, `path` TEXT NOT NULL, `query` TEXT NOT NULL, `requestHeaders` TEXT NOT NULL, `requestBody` TEXT, `requestBodyTruncated` INTEGER NOT NULL, `statusCode` INTEGER NOT NULL, `responseHeaders` TEXT NOT NULL, `responseBody` TEXT NOT NULL, `responseBodyTruncated` INTEGER NOT NULL, `durationMs` INTEGER NOT NULL, `matchedRouteId` TEXT, `matchedResponseId` TEXT, `matchTrace` TEXT, `sizeBytes` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "environmentId",
+            "columnName": "environmentId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestampMs",
+            "columnName": "timestampMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "method",
+            "columnName": "method",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "path",
+            "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "query",
+            "columnName": "query",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "requestHeaders",
+            "columnName": "requestHeaders",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "requestBody",
+            "columnName": "requestBody",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "requestBodyTruncated",
+            "columnName": "requestBodyTruncated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "statusCode",
+            "columnName": "statusCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "responseHeaders",
+            "columnName": "responseHeaders",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "responseBody",
+            "columnName": "responseBody",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "responseBodyTruncated",
+            "columnName": "responseBodyTruncated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "durationMs",
+            "columnName": "durationMs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "matchedRouteId",
+            "columnName": "matchedRouteId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "matchedResponseId",
+            "columnName": "matchedResponseId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "matchTrace",
+            "columnName": "matchTrace",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "sizeBytes",
+            "columnName": "sizeBytes",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_request_log_environmentId_timestampMs",
+            "unique": false,
+            "columnNames": [
+              "environmentId",
+              "timestampMs"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_request_log_environmentId_timestampMs` ON `${TABLE_NAME}` (`environmentId`, `timestampMs`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0d2af1a41ef02193fc131200ac651b87')"
+    ]
+  }
+}

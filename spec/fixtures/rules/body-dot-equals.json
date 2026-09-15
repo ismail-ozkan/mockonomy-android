@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "name": "body-dot-equals",
+    "description": "BODY + dot notation + EQUALS",
+    "phase": 2,
+    "specRef": "behavior/rules.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-rules",
+    "name": "Rules",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "POST",
+        "path": "/login",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-admin",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"role\":\"admin\"}",
+            "rulesOperator": "AND",
+            "rules": [
+              {
+                "target": "BODY",
+                "operator": "EQUALS",
+                "key": "user.role",
+                "value": "admin"
+              }
+            ]
+          },
+          {
+            "id": "resp-user",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"role\":\"user\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "POST",
+    "path": "/login",
+    "query": {},
+    "headers": {},
+    "body": "{\"user\":{\"role\":\"admin\"}}"
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"role\":\"admin\"}",
+    "latencyMs": 0
+  }
+}

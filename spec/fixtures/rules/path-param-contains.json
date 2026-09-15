@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "name": "path-param-contains",
+    "description": "PATH_PARAM + CONTAINS looks for a substring",
+    "phase": 2,
+    "specRef": "behavior/rules.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-rules",
+    "name": "Rules",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "GET",
+        "path": "/orders/:code",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-hit",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"hit\":true}",
+            "rulesOperator": "AND",
+            "rules": [
+              {
+                "target": "PATH_PARAM",
+                "operator": "CONTAINS",
+                "key": "code",
+                "value": "-TR-"
+              }
+            ]
+          },
+          {
+            "id": "resp-default",
+            "label": "200",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"ok\":true}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/orders/ORD-TR-9001",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"hit\":true}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {
+    "code": "ORD-TR-9001"
+  }
+}

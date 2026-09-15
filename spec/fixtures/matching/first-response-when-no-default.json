@@ -1,0 +1,62 @@
+{
+  "meta": {
+    "name": "first-response-when-no-default",
+    "description": "Without isDefault, the first response in the list is served",
+    "phase": 0,
+    "specRef": "behavior/matching.md#5-response-selection"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-test",
+    "name": "Test",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-ping",
+        "method": "GET",
+        "path": "/ping",
+        "responses": [
+          {
+            "id": "first",
+            "statusCode": 500,
+            "headers": [],
+            "body": "{\"e\":1}",
+            "isDefault": false
+          },
+          {
+            "id": "second",
+            "statusCode": 201,
+            "headers": [],
+            "body": "{\"ok\":true}",
+            "isDefault": false
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/ping",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 500,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"e\":1}",
+    "latencyMs": 0
+  }
+}

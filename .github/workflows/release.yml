@@ -1,0 +1,78 @@
+# Release workflow — tag → signed AAB → Play Console internal testing.
+#
+# This workflow **fails until the secrets are configured**, on purpose: knowing whether the
+# workflow works beats not noticing a lost keystore or service account.
+#
+# REQUIRED SECRETS (repository → Settings → Secrets → Actions):
+#   SIGNING_KEYSTORE_BASE64      # `base64 -i upload-keystore.jks`
+#   SIGNING_KEYSTORE_PASSWORD    # keystore password
+#   SIGNING_KEY_ALIAS            # key alias (e.g. "upload")
+#   SIGNING_KEY_PASSWORD         # key password
+#   PLAY_SERVICE_ACCOUNT_JSON    # Play Console service account JSON (full content)
+#
+# Trigger: pushing a `v*` tag (e.g. v1.0.0). workflow_dispatch is enabled for manual runs
+# too — the AAB is built and uploaded as an artifact even without the Play step.
+
+name: Release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Write the keystore to a file
+        env:
+          KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
+        run: |
+          if [[ -z "${KEYSTORE_BASE64:-}" ]]; then
+            echo "::error::SIGNING_KEYSTORE_BASE64 is not set"
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload.jks"
+          echo "SIGNING_KEYSTORE_PATH=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
+
+      # The current signingConfig in app/build.gradle.kts does not read these env variables
+      # directly (it reads keystore.properties) — once release signing is wired up in CI,
+      # this step will feed the `signingConfigs { create("release") { ... } }` block.
+      - name: Build the release AAB (R8 + signing)
+        env:
+          SIGNING_KEYSTORE_PATH: ${{ env.SIGNING_KEYSTORE_PATH }}
+          SIGNING_KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: ./gradlew :app:bundleRelease --no-daemon --stacktrace
+
+      - name: Upload the AAB as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+
+      - name: Upload to Play internal testing
+        # Only on a real tag push and when the service account is set
+        if: startsWith(github.ref, 'refs/tags/v') && env.PLAY_JSON != ''
+        env:
+          PLAY_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.mockonomy
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: internal
+          status: draft

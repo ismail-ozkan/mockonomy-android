@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockonomy — Privacy Policy</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1b1c22;
+    background: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e7ee; background: #161826; }
+    a { color: #8fb6ff; }
+  }
+  h1 { font-size: 1.7rem; margin-bottom: .25rem; }
+  h2 { font-size: 1.1rem; margin-top: 2.25rem; }
+  .updated { opacity: .7; font-size: .9rem; }
+  ul { padding-left: 1.2rem; }
+  li { margin: .35rem 0; }
+</style>
+</head>
+<body>
+
+<h1>Privacy Policy</h1>
+<p class="updated">Mockonomy · Last updated: 16 August 2026</p>
+
+<p>
+  Mockonomy is an HTTP mock server that runs on your own device. It has no
+  backend of its own, no account system, and no analytics.
+</p>
+
+<h2>Data we collect</h2>
+<p><strong>None.</strong> Mockonomy does not collect, transmit, or share any
+personal or usage data. There is no analytics SDK, no crash-reporting SDK, no
+advertising SDK, and no sign-in.</p>
+
+<h2>Data the app stores on your device</h2>
+<p>Everything the app creates stays in its private storage on your device:</p>
+<ul>
+  <li>Your environments and route definitions</li>
+  <li>Response bodies you write or import</li>
+  <li>The request log: requests received by the mock server, together with the
+      responses it returned</li>
+</ul>
+<p>
+  This data is never uploaded anywhere. You can delete individual items in the
+  app, and uninstalling the app removes all of it. Note that the request log can
+  contain whatever the app under test sent to the mock server — including
+  headers such as <code>Authorization</code>. That is data you generate on your
+  own device during testing; it never leaves it unless you deliberately export
+  or share it yourself.
+</p>
+
+<h2>Network access</h2>
+<p>
+  Mockonomy requests the <code>INTERNET</code> permission solely in order to
+  open a listening socket on the loopback interface (<code>127.0.0.1</code>) of
+  your device. The mock server is bound to loopback only: it cannot be reached
+  from your Wi-Fi network or from the internet, and only apps on the same device
+  can connect to it. The app makes no outgoing network requests.
+</p>
+
+<h2>Notifications and the foreground service</h2>
+<p>
+  While the mock server is running, Mockonomy runs a foreground service and
+  shows a persistent notification with the server status and a Stop action. This
+  keeps the server available while you switch to the app you are testing. The
+  service runs only while you have explicitly started the server, and stops when
+  you stop it. No data is collected for this purpose.
+</p>
+
+<h2>Children</h2>
+<p>
+  Mockonomy is a developer tool and is not directed at children. It collects no
+  data from anyone, including children.
+</p>
+
+<h2>Changes to this policy</h2>
+<p>
+  If a future version of the app changes what data it handles, this page will be
+  updated before that version is released, and the date above will change.
+</p>
+
+<h2>Contact</h2>
+<p>
+  Questions about this policy: <a href="mailto:CONTACT_EMAIL">CONTACT_EMAIL</a>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "name": "raw-insertion",
+    "description": "Triple braces insert the value raw — needed when the value itself is JSON",
+    "phase": 2,
+    "specRef": "behavior/templating.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-tpl",
+    "name": "Templating",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "POST",
+        "path": "/echo",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-1",
+            "label": "200 – ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"user\":{{{body.user}}}}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "POST",
+    "path": "/echo",
+    "query": {},
+    "headers": {},
+    "body": "{\"user\":{\"name\":\"Ada\"}}"
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"user\":{\"name\":\"Ada\"}}",
+    "latencyMs": 0
+  }
+}

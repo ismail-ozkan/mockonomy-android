@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "name": "not-found-ignores-environment",
+    "description": "The default 404 is synthetic; environment latency and headers are not applied",
+    "phase": 0,
+    "specRef": "behavior/matching.md#3-no-candidates-fallback"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-test",
+    "name": "Test",
+    "port": 8080,
+    "prefix": "",
+    "defaultLatencyMs": 500,
+    "headers": [
+      {
+        "key": "X-Env",
+        "value": "should-not-appear"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-ping",
+        "method": "GET",
+        "path": "/ping",
+        "responses": [
+          {
+            "id": "resp-ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"status\":\"ok\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/nope",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 404,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"error\":\"no_match\",\"message\":\"No route matched GET /nope\"}",
+    "latencyMs": 0
+  }
+}

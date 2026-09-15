@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mockonomy launcher mark "3a — loop orbits the device".
+    The geometry was drawn on a 48-unit grid, scaled by x1.375 and shifted by 21, so the
+    drawing stays within the 66dp safe zone of the 108dp canvas and survives every OEM
+    mask.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M54,33.375 A20.625,20.625 0 1 1 33.375,54"
+        android:strokeColor="#9184D9"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M33.375,39.7 L39.7,50.425 L27.05,50.425 Z"
+        android:fillColor="#9184D9" />
+    <path
+        android:pathData="M51.25,43.275 L56.75,43.275 A3.575,3.575 0 0 1 60.325,46.85 L60.325,61.15 A3.575,3.575 0 0 1 56.75,64.725 L51.25,64.725 A3.575,3.575 0 0 1 47.675,61.15 L47.675,46.85 A3.575,3.575 0 0 1 51.25,43.275 Z"
+        android:strokeColor="#E9E9ED"
+        android:strokeWidth="3.575"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M51.8,60.6 L56.2,60.6"
+        android:strokeColor="#E9E9ED"
+        android:strokeWidth="2.75"
+        android:strokeLineCap="round" />
+</vector>

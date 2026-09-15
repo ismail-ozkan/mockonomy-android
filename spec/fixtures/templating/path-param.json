@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "name": "path-param",
+    "description": "A path parameter is written into the body",
+    "phase": 2,
+    "specRef": "behavior/templating.md"
+  },
+  "environment": {
+    "schemaVersion": 1,
+    "id": "env-tpl",
+    "name": "Templating",
+    "port": 8080,
+    "prefix": "",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "routes": [
+      {
+        "id": "route-1",
+        "method": "GET",
+        "path": "/users/:id",
+        "enabled": true,
+        "responses": [
+          {
+            "id": "resp-1",
+            "label": "200 – ok",
+            "statusCode": 200,
+            "headers": [],
+            "body": "{\"id\":\"{{path.id}}\",\"name\":\"Test User\"}",
+            "isDefault": true
+          }
+        ]
+      }
+    ]
+  },
+  "request": {
+    "method": "GET",
+    "path": "/users/42",
+    "query": {},
+    "headers": {},
+    "body": null
+  },
+  "expectedResponse": {
+    "statusCode": 200,
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "body": "{\"id\":\"42\",\"name\":\"Test User\"}",
+    "latencyMs": 0
+  },
+  "expectedPathParams": {
+    "id": "42"
+  }
+}
