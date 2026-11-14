@@ -37,6 +37,15 @@ data class Environment(
 
         /** The initial port used when a new environment is created. */
         const val DEFAULT_PORT: Int = 8080
+
+        /**
+         * Lowest bindable port. Privileged ports (<1024) cannot be bound on loopback
+         * without root, so they are rejected before a socket is opened.
+         */
+        const val MIN_PORT: Int = 1024
+
+        /** Highest bindable port; above this the value is not a TCP port at all. */
+        const val MAX_PORT: Int = 65535
     }
 }
 

@@ -266,10 +266,10 @@ class MockServerController @Inject constructor(
      * `0` = "let the operating system choose" (used by tests) and counts as valid.
      */
     private fun portRangeError(port: Int): String? =
-        if (port == 0 || port in MIN_PORT..MAX_PORT) {
+        if (port == 0 || port in Environment.MIN_PORT..Environment.MAX_PORT) {
             null
         } else {
-            "Port $port is out of range. Use a port between $MIN_PORT and $MAX_PORT."
+            "Port $port is out of range. Use a port between ${Environment.MIN_PORT} and ${Environment.MAX_PORT}."
         }
 
     private fun conflictingServer(port: Int): RunningServer? =
@@ -361,9 +361,5 @@ class MockServerController @Inject constructor(
     private companion object {
         const val MAX_CAUSE_CHAIN_DEPTH = 10
         const val FAILURE_BUFFER = 8
-        // Privileged ports (<1024) cannot be bound on loopback anyway; the UI states the
-        // same range ("Loopback only; 1024-65535").
-        const val MIN_PORT = 1024
-        const val MAX_PORT = 65535
     }
 }

@@ -51,6 +51,8 @@ fun EnvironmentSettingsTab(
     modifier: Modifier = Modifier,
 ) {
     var advancedExpanded by rememberSaveable { mutableStateOf(false) }
+    val portInput by viewModel.portInput.collectAsStateWithLifecycle()
+    val portError by viewModel.portError.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
@@ -59,14 +61,11 @@ fun EnvironmentSettingsTab(
             .padding(Spacing.s4),
     ) {
         OutlinedTextField(
-            value = current.port.toString(),
-            onValueChange = { text ->
-                text.filter { it.isDigit() }.take(5).toIntOrNull()?.let { port ->
-                    viewModel.update { it.copy(port = port) }
-                }
-            },
+            value = portInput ?: current.port.toString(),
+            onValueChange = viewModel::editPort,
             label = { Text("Port") },
-            supportingText = { Text("Loopback only; 1024-65535") },
+            isError = portError != null,
+            supportingText = { Text(portError ?: "Loopback only; 1024-65535") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth().padding(bottom = Spacing.s3),

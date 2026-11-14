@@ -70,6 +70,7 @@ fun EnvironmentDetailScreen(
     val environment by viewModel.environment.collectAsStateWithLifecycle()
     val loaded by viewModel.loaded.collectAsStateWithLifecycle()
     val isRunning by viewModel.isRunning.collectAsStateWithLifecycle()
+    val portError by viewModel.portError.collectAsStateWithLifecycle()
 
     // Port conflicts and range errors originate exactly on this screen (Settings).
     val snackbarHostState = remember { SnackbarHostState() }
@@ -107,6 +108,9 @@ fun EnvironmentDetailScreen(
                 if (environment != null) {
                     StartStopButton(
                         isRunning = isRunning,
+                        // Stop stays available: the port may have been broken while the
+                        // server was already serving on a good one.
+                        enabled = isRunning || portError == null,
                         onClick = viewModel::toggleRunning,
                         modifier = Modifier.padding(start = Spacing.s2),
                     )
@@ -215,27 +219,50 @@ private fun TabButton(
     }
 }
 
-/** Start/Stop in the app bar — accent-bordered while running, neutral while stopped. */
+/**
+ * Start/Stop in the app bar — accent-bordered while running, neutral while stopped and
+ * faint while disabled (an unbindable port).
+ */
 @Composable
-private fun StartStopButton(isRunning: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+private fun StartStopButton(
+    isRunning: Boolean,
+    enabled: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val iconTint = when {
+        !enabled -> MockonomyTheme.colors.onSurfaceFaint
+        isRunning -> MockonomyTheme.colors.primaryText
+        else -> MockonomyTheme.colors.onSurfaceVariant
+    }
+    val labelColor = when {
+        !enabled -> MockonomyTheme.colors.onSurfaceFaint
+        isRunning -> MockonomyTheme.colors.primaryText
+        else -> MockonomyTheme.colors.onSurface
+    }
     OutlinedButton(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier.defaultMinSize(minHeight = MockonomyMetrics.minTouchTarget),
         border = BorderStroke(
             width = 1.dp,
-            color = if (isRunning) MockonomyTheme.colors.primary else MockonomyTheme.colors.outline,
+            color = when {
+                !enabled -> MockonomyTheme.colors.outlineSubtle
+                isRunning -> MockonomyTheme.colors.primary
+                else -> MockonomyTheme.colors.outline
+            },
         ),
     ) {
         MockonomyIcon(
             icon = if (isRunning) MockonomyIcons.StopFill else MockonomyIcons.PlayFill,
             contentDescription = null,
-            tint = if (isRunning) MockonomyTheme.colors.primaryText else MockonomyTheme.colors.onSurfaceVariant,
+            tint = iconTint,
             size = 11.dp,
         )
         Text(
             text = if (isRunning) "Stop" else "Start",
             style = MockonomyTheme.typography.label,
-            color = if (isRunning) MockonomyTheme.colors.primaryText else MockonomyTheme.colors.onSurface,
+            color = labelColor,
             modifier = Modifier.padding(start = 6.dp),
         )
     }

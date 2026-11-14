@@ -15,6 +15,8 @@ import com.mockonomy.server.ServerLauncher
 import com.mockonomy.ui.editing.EnvironmentDocument
 import com.mockonomy.ui.navigation.MockonomyDestination
 import com.mockonomy.ui.screens.routes.withDefaultResponse
+import com.mockonomy.ui.screens.settings.PORT_INPUT_MAX_DIGITS
+import com.mockonomy.ui.screens.settings.portInputError
 import com.mockonomy.ui.screens.settings.withInitialState
 import com.mockonomy.ui.screens.settings.withStateAdded
 import com.mockonomy.ui.screens.settings.withStateDeleted
@@ -27,8 +29,11 @@ import com.mockonomy.ui.screens.routes.withRouteTransformed
 import com.mockonomy.ui.screens.toggleEnvironmentRunning
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -69,6 +74,26 @@ class EnvironmentDetailViewModel @Inject constructor(
     /** While `environment == null`: is it still being read, or is the file gone? */
     val loaded: StateFlow<Boolean> = document.loaded
 
+    private val _portInput = MutableStateFlow<String?>(null)
+
+    /**
+     * Raw text of the Port field while it is being edited; `null` → the field shows the
+     * stored port. It lives here rather than in the composable because a rejected value
+     * (out of range, or cleared) is never written to the environment, and the Start
+     * button in the app bar still has to know about it.
+     */
+    val portInput: StateFlow<String?> = _portInput.asStateFlow()
+
+    /**
+     * Message for the Port field, or `null` while the port is bindable. Covers ports
+     * already on disk too: a file written before this check existed can hold an
+     * out-of-range port, and that must show up without the user touching the field.
+     */
+    val portError: StateFlow<String?> =
+        combine(document.state, _portInput) { environment, input ->
+            portInputError(input ?: environment?.port?.toString() ?: "")
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
+
     /** For Start/Stop in the app bar: is this environment's server running? */
     val isRunning: StateFlow<Boolean> = serverController.running
         .map { servers -> servers.any { it.environmentId == environmentId } }
@@ -104,6 +129,18 @@ class EnvironmentDetailViewModel @Inject constructor(
     }
 
     fun update(transform: (Environment) -> Environment) = document.update(transform)
+
+    /**
+     * Writes the Port field. A value that no server can bind is kept as a draft only —
+     * it is never saved, so the file cannot gain a port that would be refused at start.
+     */
+    fun editPort(text: String) {
+        val digits = text.filter { it.isDigit() }.take(PORT_INPUT_MAX_DIGITS)
+        _portInput.value = digits
+        if (portInputError(digits) == null) {
+            document.update { it.copy(port = digits.toInt()) }
+        }
+    }
 
     // --- State machine — the logic lives in `settings/StateEdits.kt`, pure ---
 
